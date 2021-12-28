@@ -35,7 +35,9 @@ const UsuarioSchema = Schema({
 // Para eliminar password de la BD
 UsuarioSchema.method("toJSON", function () {
   // saco __v y password, y el resto de las props las almaceno en usuario
-  const { __v, password, ...usuario } = this.toObject();
+  const { __v, password, _id, ...usuario } = this.toObject();
+  // Cambio el nombre visual de _id por uid en la bd
+  usuario.uid = _id;
   return usuario;
 });
 
