@@ -23,21 +23,6 @@ const getUsuarios = async (req = request, res = response) => {
   res.json({ total, usuarios });
 };
 
-// PUT
-const putUsuarios = async (req, res = response) => {
-  const { id } = req.params;
-  const { _id, password, google, email, ...rest } = req.body;
-
-  if (password) {
-    const salt = bcrypt.genSaltSync(10);
-    rest.password = bcrypt.hashSync(password, salt);
-  }
-
-  const usuario = await Usuario.findByIdAndUpdate(id, rest);
-
-  res.json(usuario);
-};
-
 // POST
 const postUsuarios = async (req, res = response) => {
   const { nombre, email, password, role } = req.body;
@@ -52,6 +37,21 @@ const postUsuarios = async (req, res = response) => {
   await usuario.save();
 
   res.json({ msg: "post API - controlador", usuario });
+};
+
+// PUT
+const putUsuarios = async (req, res = response) => {
+  const { id } = req.params;
+  const { _id, password, google, email, ...rest } = req.body;
+
+  if (password) {
+    const salt = bcrypt.genSaltSync(10);
+    rest.password = bcrypt.hashSync(password, salt);
+  }
+
+  const usuario = await Usuario.findByIdAndUpdate(id, rest);
+
+  res.json(usuario);
 };
 
 // DELETE
