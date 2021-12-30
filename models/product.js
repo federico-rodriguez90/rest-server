@@ -5,22 +5,15 @@ const ProductSchema = Schema({
     type: String,
     required: [true, "El nombre es obligatorio"],
   },
-  descripcion: {
-    type: String,
-  },
+  descripcion: { type: String },
   category: {
     type: Schema.Types.ObjectId,
     ref: "Category",
     required: true,
   },
-  precio: {
-    type: Number,
-    default: 0,
-  },
-  disponible: {
-    type: Boolean,
-    default: true,
-  },
+  precio: { type: Number, default: 0 },
+  disponible: { type: Boolean, default: true },
+  img: { type: String },
   usuario: {
     type: Schema.Types.ObjectId,
     ref: "Usuario",

@@ -1,12 +1,26 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 
-const { uploadFile } = require("../controllers/uploads");
+const { uploadFile, updateFile } = require("../controllers/uploads");
+const { coleccionesPermitidas } = require("../helpers");
 
-const { validationFields } = require("../middlewares");
+const { validationFields, validateFileUpload } = require("../middlewares");
 
 const router = Router();
 
-router.post("/", uploadFile);
+router.post("/", validateFileUpload, uploadFile);
+
+router.put(
+  "/:coleccion/:id",
+  [
+    validateFileUpload,
+    check("id", "El id debe ser de MongoDB").isMongoId(),
+    check("coleccion").custom((c) =>
+      coleccionesPermitidas(c, ["usuarios", "products"])
+    ),
+    validationFields,
+  ],
+  updateFile
+);
 
 module.exports = router;
