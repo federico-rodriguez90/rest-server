@@ -65,4 +65,44 @@ const updateFile = async (req, res = response) => {
   res.json(modelo);
 };
 
-module.exports = { uploadFile, updateFile };
+const getFile = async (req, res = response) => {
+  const { coleccion, id } = req.params;
+
+  let modelo;
+
+  switch (coleccion) {
+    case "usuarios":
+      modelo = await Usuario.findById(id);
+      if (!modelo) {
+        return res
+          .status(400)
+          .json({ msg: `El usuario con el id: ${id} no existe` });
+      }
+      break;
+
+    case "products":
+      modelo = await Product.findById(id);
+      if (!modelo) {
+        return res
+          .status(400)
+          .json({ msg: `El producto con el id: ${id} no existe` });
+      }
+      break;
+
+    default:
+      return res.status(500).json({ msg: "Se me olvido validar esto" });
+  }
+
+  // Obtenemos imagen
+  if (modelo.img) {
+    // Devolvemos imagen
+    const pathImg = path.join(__dirname, "../uploads", coleccion, modelo.img);
+    if (fs.existsSync(pathImg)) {
+      return res.sendFile(pathImg);
+    }
+  }
+
+  res.json({ msg: "falta placeholder" });
+};
+
+module.exports = { uploadFile, updateFile, getFile };
